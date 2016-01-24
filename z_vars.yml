@@ -1,0 +1,26 @@
+---
+# Example with variables in input:
+# ansible-playbook -s vars.yml --extra-vars "ip_server=192.168.56.10"
+
+- hosts: lab36
+  remote_user: vagrant
+  vars:
+  - ip_server: 192.168.150.135
+  - name_server: pdc.mastri.edu
+  - lab: 'lab36'
+  - backup_comment: "# Backup on server"
+
+  tasks:
+  - name: remove server reference from  /etc/hosts file
+    lineinfile: dest=/etc/hosts regexp="{{ name_server }}" state=absent
+  - name: add server to /etc/hosts file
+    lineinfile: dest=/etc/hosts line="{{ ip_server }} {{ name_server }}"
+
+- hosts: lab37
+  remote_user: vagrant
+
+  tasks:
+#  - name: apt-get update, if necessary
+#    apt: update_cache=yes cache_valid_time=3600
+
+

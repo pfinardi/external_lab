@@ -1,0 +1,40 @@
+---
+# ansible-playbook -s nfs.yml --extra-vars "main_user=vagrant"
+
+#---------------------------------------------------------------------------
+# All hosts
+
+- hosts: all
+  vars:
+  - main_user: "riservato"
+  - name_server: "pdc.mastri.edu"
+
+  tasks:
+  
+  - name: apt-get update, if necessary
+    apt: update_cache=yes cache_valid_time=3600
+
+  # Install packages
+  - name: install nfs-common
+    apt: name=nfs-common state=latest
+
+  # Create mount point
+  - name: Check if directory of mount point exists
+    shell: test -d /media/Condivisa
+    register: check_mountpoint
+    ignore_errors: true
+  - name: Create directory for mount point NFS
+    shell: mkdir -p /media/Condivisa
+    when: check_mountpoint|failed
+
+  #- name: remove server reference from  /etc/hosts file
+  #  lineinfile: dest=/etc/hosts regexp="{{ name_server }}" state=absent
+  #- name: add shared folder NFS in FSTAB
+    #lineinfile: dest=/etc/fstab line="{{name_server}}:/var/lab_esterni/condivisa /media/Condivisa nfs"
+  #- name: Mount shared folder
+    #shell: mount -a
+  - name: mount shared folder NFS in FSTAB
+    mount: name=/media/Condivisa src={{name_server}}:/var/lab_esterni/condivisa fstype=nfs state=mounted
+  - name: Show Shared Foldes on desktop
+    become_user: "{{ main_user }}"
+    script: make_gsettings_nfs.sh

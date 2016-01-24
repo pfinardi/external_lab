@@ -1,0 +1,25 @@
+---
+# Example with variables in input:
+# ansible-playbook -s basic_settings.yml --extra-vars "ip_server=192.168.56.10 main_user=vagrant copy_sources=no"
+
+- hosts: all
+  vars:
+  - ip_server: 192.168.150.135
+  - name_server: "pdc.mastri.edu"
+  - main_user: "riservato"
+  - copy_sources: "yes"
+
+  tasks:
+  - name: remove server reference from  /etc/hosts file
+    lineinfile: dest=/etc/hosts regexp="{{ name_server }}" state=absent
+  - name: add server to /etc/hosts file
+    lineinfile: dest=/etc/hosts line="{{ ip_server }} {{ name_server }}"
+  - name: Setting Preferences with "gsettings"
+    become_user: "{{ main_user }}"
+    script: make_gsettings.sh
+
+  # Copy source.list
+  - name: Copy /etc/sources.list
+    copy: src=/var/lab_esterni/etc/sources.list dest=/etc/apt/ owner=root group=root mode="u=rw,g=r,o=r"
+    when: copy_sources=="yes"
+

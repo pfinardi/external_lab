@@ -1,0 +1,12 @@
+---
+# ansible-playbook -s z_check_ip_address_node.yml
+
+- hosts: lab37
+
+  tasks:  
+  - name: HELLO
+    become_user: vagrant
+    #shell: echo {{ ansible_eth1.ipv4.address }} >> $HOME/Scrivania/ciao.txt
+    shell: echo {{ inventory_hostname }} >> $HOME/Scrivania/ciao.txt
+    #shell: echo {{ ansible_default_ipv4 }} >> $HOME/Scrivania/ciao.txt
+    #shell: echo {{ hostvars[groups['lab36'][0]]['ansible_eth0']['ipv4']['address'] }} >> $HOME/Scrivania/ciao.txt

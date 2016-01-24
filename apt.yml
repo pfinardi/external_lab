@@ -1,0 +1,90 @@
+---
+# ansible-playbook -s apt.yml --extra-vars "main_user=vagrant"
+
+#---------------------------------------------------------------------------
+# All hosts
+
+- hosts: all
+  vars:
+  - main_user: "riservato"
+  - xmind_32: "xmind-7-update1-linux_i386.deb"
+  - xmind_64: "xmind-7-update1-linux_amd64.deb"
+
+  tasks:
+  
+  - name: apt-get update, if necessary
+    apt: update_cache=yes cache_valid_time=3600
+
+  # Install packages
+  - name: install openjdk-7-jre
+    apt: name=openjdk-7-jre state=latest
+  - name: install geogebra
+    apt: name=geogebra state=latest
+  - name: ubuntu-restricted-extras
+    apt: name=ubuntu-restricted-extras state=latest
+  - name: ttf-mscorefonts-installer
+    apt: name=ttf-mscorefonts-installer state=latest
+
+  # Remove package unnecessary    
+  - name: remove apparmor
+    apt: name=apparmor state=absent
+  - name: purge unity-webapps-common
+    apt: name=unity-webapps-common state=absent purge=yes
+  - name: purge deja-dup
+    apt: name=deja-dup state=absent purge=yes
+
+  #------- XMIND Installation ------------------
+  # check if is just installed
+  - name: Check if package XMIND is installed
+    command: dpkg-query -W xmind*
+    register: xmind_check_deb
+    failed_when: xmind_check_deb.rc > 1
+    changed_when: xmind_check_deb.rc == 1
+
+  # check architecture
+  - name: Check Architecture 32 or 64 bit?
+    command: uname -m
+    register: bit_check
+
+  # Copy the DEB package
+  - name: Copy the DEB package 32 bit on remote node
+    become_user: "{{ main_user }}"
+    copy: src=/var/lab_esterni/packages/{{ xmind_32 }} dest=/home/{{ main_user }}/Scaricati/ owner={{ main_user }} group={{ main_user }} mode="u=rwx,g=rx,o=rx"
+    when: bit_check.stdout == "i686" and xmind_check_deb.rc == 1
+  - name: Copy the DEB package 64 bit on remote node
+    become_user: "{{ main_user }}"
+    copy: src=/var/lab_esterni/packages/{{ xmind_64 }} dest=/home/{{ main_user }}/Scaricati/ owner={{ main_user }} group={{ main_user }} mode="u=rwx,g=rx,o=rx"
+    when: bit_check.stdout == "x86_64" and xmind_check_deb.rc == 1
+
+  # Install DEB package
+  - name: Install DEB package 32 bit
+    apt: deb="/home/{{ main_user }}/Scaricati/{{ xmind_32 }}"
+    sudo: true
+    when: bit_check.stdout == "i686" and xmind_check_deb.rc == 1
+  - name: Install DEB package 64 bit
+    apt: deb="/home/{{ main_user }}/Scaricati/{{ xmind_64 }}"
+    sudo: true
+    when: bit_check.stdout == "x86_64" and xmind_check_deb.rc == 1
+
+  # Put XMIND icon on desktop
+  - name: copy icon on desktop
+    become_user: "{{ main_user }}"
+    shell: cp /usr/share/applications/xmind.desktop $HOME/Scrivania/
+  - name: chown on xmind icon
+    become_user: "{{ main_user }}"  
+    shell: chown {{ main_user }}:{{ main_user }} $HOME/Scrivania/xmind.desktop
+  - name: chmod on xmind icon
+    become_user: "{{ main_user }}"  
+    shell: chmod 755 $HOME/Scrivania/xmind.desktop
+  #------- XMIND Installation End ---------------
+   
+
+#---------------------------------------------------------------------------
+# Only hosts of laboratory 37
+
+- hosts: lab37
+
+  tasks:
+  # Remove package unnecessary    
+  - name: remove epoptes
+    apt: name=epoptes state=absent

@@ -1,0 +1,51 @@
+---
+# ansible-playbook backup_ssh.yml --extra-vars "ip_server=192.168.56.10 main_user=vagrant labext_pwd=?????"
+
+#---------------------------------------------------------------------------
+# All hosts
+
+- hosts: all
+  vars:
+  - main_user: "riservato"
+  - ip_server: 192.168.150.135
+  - labext_pwd: noooooooo
+
+  tasks:
+  
+  #-------------------------------------------
+  # Create SSH Key if doesn't exist
+  - name: Check if directory .ssh exists
+    shell: test -d $HOME/.ssh
+    register: check_sshdir
+    ignore_errors: true
+  
+  - name: Create directory .ssh
+    shell: mkdir -p $HOME/.ssh
+    when: check_sshdir|failed
+  
+  - name: Check if SSH key exists
+    shell: test -f $HOME/.ssh/id_rsa
+    changed_when: false
+    ignore_errors: true
+    register: check_key
+  
+  - name: Create SSH Key
+    shell: ssh-keygen -t rsa -b 1024 -f $HOME/.ssh/id_rsa -N ''
+    when: check_key|failed
+
+  #-------------------------------------------
+  # Copy SSH public key of any host on backup server
+  - name: sshpass (important to copy ssh id without prompt password)
+    become_user: root
+    apt: name=sshpass state=latest
+  - name: Copy SSH key on backup server
+    become_user: "{{ main_user }}"
+    shell: sshpass -p {{ labext_pwd }} ssh-copy-id -i $HOME/.ssh/id_rsa.pub labext@{{ ip_server }}
+    when: ansible_eth0.ipv4.address != "{{ ip_server }}" and ansible_eth1.ipv4.address != "{{ ip_server }}"
+
+  #-------------------------------------------  
+  # Add Backup job in crontab
+  - name: Update backup definitions
+    cron: name="Update backup definitions" special_time=reboot job="rsync -avz --ignore-errors -e ssh labext@{{ip_server}}:/var/lab_esterni/Backup/Backup_config/backup_exclude.txt $HOME/.backup_exclude.txt > /dev/null"
+  - name: add backup job in crontab
+    cron: name="add backup job in crontab" minute="0/15" job="rsync -avz --stats --delete-excluded --delete --exclude-from=.backup_exclude.txt --ignore-errors -e ssh $HOME/ labext@{{ip_server}}:/var/lab_esterni/Backup/$HOSTNAME > Z_Backup.txt"

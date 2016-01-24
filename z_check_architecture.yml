@@ -1,0 +1,23 @@
+---
+# ansible-playbook -s z_check_architecture.yml --extra-vars "main_user=vagrant"
+
+- hosts: lab36
+  vars:
+  - main_user: riservato
+
+  tasks:  
+  - name: Check Architecture 32 or 64 bit?
+    command: uname -m
+    register: bit_check
+  - name: HELLO
+    become_user: "{{ main_user }}"
+    shell: echo {{ bit_check.stdout }} >> $HOME/Scrivania/ciao.txt
+  - name: HELLO
+    become_user: "{{ main_user }}"
+    shell: echo "32 bit" >> $HOME/Scrivania/ciao.txt
+    when: bit_check.stdout == "i686" and xmind_check_deb.rc == 1
+  - name: HELLO
+    become_user: "{{ main_user }}"
+    shell: echo "64 bit" >> $HOME/Scrivania/ciao.txt
+    when: bit_check.stdout == "x86_64"
+

@@ -1,0 +1,25 @@
+---
+# Example with variables in input:
+# ansible-playbook -s unattended-upgrades.yml
+
+- hosts: lab37
+  vars:
+  - copy_etc: "yes"
+
+  tasks:
+  - name: apt-get update, if necessary
+    apt: update_cache=yes cache_valid_time=3600
+
+  - name: install unattended-upgrades
+    apt: name=unattended-upgrades state=latest
+
+  - name: Copy /etc/apt/apt.conf.d/50unattended-upgrades
+    copy: src=./files/50unattended-upgrades dest=/etc/apt/apt.conf.d/ owner=root group=root mode="u=rw,g=r,o=r"
+    #synchronize: mode=pull src=./files/50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades owner=root group=root mode="u=rw,g=r,o=r"
+    #synchronize: src=./files/50unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades owner=root group=root mode="u=rw,g=r,o=r"
+    when: copy_etc=="yes"
+
+  - name: Copy /etc/apt/apt.conf.d/10periodic
+    copy: src=./files/10periodic dest=/etc/apt/apt.conf.d/ owner=root group=root mode="u=rw,g=r,o=r"
+    when: copy_etc=="yes"
+
