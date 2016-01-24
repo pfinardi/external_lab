@@ -1,5 +1,13 @@
 # external_lab
-Settings for school laboratory with Edubuntu Linux
+Settings for school laboratory with Edubuntu Linux.
+
+- configure sources.list with internal mirror server
+- install package necessary: Geogebra, XMind, ...
+- uninstall unnecessary package
+- configure scheduled backup on a server with rsync on ssh
+- set preferences: Trash on desktop, recursive search in Nautilus, ...
+- configure mount to shared folder with NFS and show it on desktop
+- configure unattended-upgrades
 
 ## To Do
 
