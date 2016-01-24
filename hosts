@@ -1,7 +1,0 @@
-[defaults]
-
-[lab36]
-192.168.56.10 ansible_ssh_user=vagrant
-
-[lab37]
-192.168.56.21 ansible_ssh_user=vagrant
