@@ -1,13 +1,14 @@
 # external_lab
 Settings for school laboratory with Edubuntu Linux.
 
-- configure sources.list with internal mirror server
-- install package necessary: Geogebra, XMind, ...
-- uninstall unnecessary package
-- configure scheduled backup on a server with rsync on ssh
-- set preferences: Trash on desktop, recursive search in Nautilus, ...
-- configure mount to shared folder with NFS and show it on desktop
-- configure unattended-upgrades
+- configure sources.list with local mirror server
+- install necessary packages: Geogebra, XMind, ...
+- uninstall unnecessary packages
+-configure scheduled backup on server with rsync on ssh
+set preferences: Trash on desktop, recursive search in Nautilus, ...
+mount shared folder with NFS and show it on desktop
+configure automatic updates with unattended-upgrades
+
 
 ## Settings
 
@@ -36,5 +37,5 @@ Install **openssh** on any host listed in file **hosts**:
 <pre><code>sudo apt-get install openssh-server</code></pre>
 
 ### ...on the server who execute ansible
-Copy the public ssh key from the server who execute *ansible* on any host listed in file **hosts**:
+Copy the public ssh key from the server who run *ansible* on any host listed in file **hosts**:
 <pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub (your_user)@(ip-host)</code></pre>
