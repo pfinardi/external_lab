@@ -12,7 +12,7 @@ Settings for school laboratory with Edubuntu Linux.
 ## Settings
 
 ### hosts file
-Make file **hosts** (that is ignored by git) with the list of the hosts to provision with **ansible**. For example:
+Create file **hosts** (that is ignored by git) with the list of the hosts to mantain with **ansible**. For example:
 
 <pre>
 [defaults]
@@ -37,4 +37,4 @@ Install **openssh** on any host listed in file **hosts**:
 
 ### ...on the server who execute ansible
 Copy the public ssh key from the server who execute *ansible* on any host listed in file **hosts**:
-<pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub (your_user)@ip-host></code></pre>
+<pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub (your_user)@(ip-host)</code></pre>
