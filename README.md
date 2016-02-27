@@ -4,10 +4,10 @@ Settings for school laboratory with Edubuntu Linux.
 - configure sources.list with local mirror server
 - install necessary packages: Geogebra, XMind, ...
 - uninstall unnecessary packages
--configure scheduled backup on server with rsync on ssh
-set preferences: Trash on desktop, recursive search in Nautilus, ...
-mount shared folder with NFS and show it on desktop
-configure automatic updates with unattended-upgrades
+- configure scheduled backup on server with rsync on ssh
+- set preferences: Trash on desktop, recursive search in Nautilus, ...
+- mount shared folder with NFS and show it on desktop
+- configure automatic updates with unattended-upgrades
 
 
 ## Settings
