@@ -57,7 +57,7 @@ Tasks (all hosts):
     - enable recursive search in Nautilus file manager
 - copy sources.list template with local mirror server in /etc/apt/
 
-### nfs
+### NFS shared 
 mount shared folder with NFS and show it on desktop
 
 <pre>
@@ -73,7 +73,7 @@ Tasks (all hosts):
 
 ### backup ssh
 <pre>
-ansible-playbook -s 30_backup_ssh.yml --extra-vars "labext_pwd=vagrant"
+ansible-playbook -s 30_backup_ssh.yml --extra-vars "labext_pwd=(password_of_user_labext"
 </pre>
 
 Configure backup ssh of the clients con server. 
