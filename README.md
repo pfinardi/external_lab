@@ -92,3 +92,15 @@ ansible-playbook -s 40_unattended-upgrades.yml
 </pre>
 
 Configure the automatic upgrades with unattended-upgrades
+
+
+### Install/Remove packages
+<pre>
+ansible-playbook -s 50_apt.yml
+</pre>
+
+Tasks:
+
+- install necessary packages from repository
+- install necessary packages with *dpkg*
+- remove unnecessary packages

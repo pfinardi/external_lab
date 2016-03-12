@@ -1,5 +1,5 @@
 ---
-# ansible-playbook -s apt.yml --extra-vars "main_user=vagrant"
+# ansible-playbook -s 50_apt.yml --extra-vars "main_user=vagrant"
 
 #---------------------------------------------------------------------------
 # All hosts
@@ -59,11 +59,11 @@
   # Install DEB package
   - name: Install DEB package 32 bit
     apt: deb="/home/{{ main_user }}/Scaricati/{{ xmind_32 }}"
-    sudo: true
+    #sudo: true
     when: bit_check.stdout == "i686" and xmind_check_deb.rc == 1
   - name: Install DEB package 64 bit
     apt: deb="/home/{{ main_user }}/Scaricati/{{ xmind_64 }}"
-    sudo: true
+    #sudo: true
     when: bit_check.stdout == "x86_64" and xmind_check_deb.rc == 1
 
   # Put XMIND icon on desktop
