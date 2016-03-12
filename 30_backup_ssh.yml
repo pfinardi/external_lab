@@ -58,7 +58,7 @@
     cron: name="Update backup definitions" special_time=reboot job="rsync -avz --ignore-errors -e ssh labext@{{ip_server}}:/var/lab_esterni/Backup/Backup_config/backup_exclude.txt $HOME/.backup_exclude.txt > /dev/null"
   - name: add backup job in crontab lab36
     become_user: "{{ main_user }}"
-    cron: name="Backup on server" state=present minute="0/15" job="rsync -avz --stats --delete-excluded --delete --exclude-from=.backup_exclude.txt --ignore-errors -e ssh $HOME/ labext@{{ip_server}}:/var/lab_esterni/Backup/lab36/$HOSTNAME > Z_Backup.txt"
+    cron: name="Backup on server" state=present minute="*/15" job="rsync -avz --stats --delete-excluded --delete --exclude-from=.backup_exclude.txt --ignore-errors -e ssh $HOME/ labext@{{ip_server}}:/var/lab_esterni/Backup/lab36/$(hostname) > Z_Backup.txt"
     
     
 
@@ -75,5 +75,5 @@
     cron: name="Update backup definitions" special_time=reboot job="rsync -avz --ignore-errors -e ssh labext@{{ip_server}}:/var/lab_esterni/Backup/Backup_config/backup_exclude.txt $HOME/.backup_exclude.txt > /dev/null"
   - name: add backup job in crontab lab37
     become_user: "{{ main_user }}"
-    cron: name="Backup on server" state=present minute="0/15" job="rsync -avz --stats --delete-excluded --delete --exclude-from=.backup_exclude.txt --ignore-errors -e ssh $HOME/ labext@{{ip_server}}:/var/lab_esterni/Backup/lab37/$HOSTNAME > Z_Backup.txt"
+    cron: name="Backup on server" state=present minute="*/15" job="rsync -avz --stats --delete-excluded --delete --exclude-from=.backup_exclude.txt --ignore-errors -e ssh $HOME/ labext@{{ip_server}}:/var/lab_esterni/Backup/lab37/$(hostname) > Z_Backup.txt"
    

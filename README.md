@@ -44,7 +44,7 @@ Copy the public ssh key from the server who run *ansible* on any host listed in 
 ---
 ## Ansible
 
-### basic settings
+### Basic settings
 <pre>
 ansible-playbook -s 10_basic_settings.yml
 </pre>
@@ -57,7 +57,7 @@ Tasks (all hosts):
     - enable recursive search in Nautilus file manager
 - copy sources.list template with local mirror server in /etc/apt/
 
-### NFS shared 
+### NFS shared folders
 mount shared folder with NFS and show it on desktop
 
 <pre>
@@ -71,7 +71,7 @@ Tasks (all hosts):
 - configure **/etc/fstab** to mount the shared folder and mount it
 - set preferences to show shared folder on desktop
 
-### backup ssh
+### SSH backup on server
 <pre>
 ansible-playbook -s 30_backup_ssh.yml --extra-vars "labext_pwd=(password_of_user_labext"
 </pre>
@@ -85,3 +85,10 @@ Tasks (all hosts):
 - create SSH key on any hosts
 - copy the SSH public key of any hosts on server
 - add backup job on **crontab** of any hosts
+
+### Configure unattended-upgrades (automatic upgrades)
+<pre>
+ansible-playbook -s 40_unattended-upgrades.yml
+</pre>
+
+Configure the automatic upgrades with unattended-upgrades

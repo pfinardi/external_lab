@@ -1,8 +1,8 @@
 ---
 # Example with variables in input:
-# ansible-playbook -s unattended-upgrades.yml
+# ansible-playbook -s 40_unattended-upgrades.yml
 
-- hosts: lab37
+- hosts: all
   vars:
   - copy_etc: "yes"
 
