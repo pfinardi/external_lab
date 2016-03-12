@@ -1,0 +1,11 @@
+Cache
+caches
+.VirtualBox
+VirtualBox VMs
+*.tmp
+Thumbs.db
+*~*
+.cache
+zeitgeist/
+.gvfs/
+.dbus/

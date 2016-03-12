@@ -1,6 +1,6 @@
 ---
 # Example with variables in input:
-# ansible-playbook -s basic_settings.yml --extra-vars "ip_server=192.168.56.10 main_user=vagrant copy_sources=no"
+# ansible-playbook -s 10_basic_settings.yml --extra-vars "ip_server=192.168.56.10 main_user=vagrant copy_sources=no"
 
 - hosts: all
   vars:
@@ -16,10 +16,11 @@
     lineinfile: dest=/etc/hosts line="{{ ip_server }} {{ name_server }}"
   - name: Setting Preferences with "gsettings"
     become_user: "{{ main_user }}"
-    script: make_gsettings.sh
+    script: 10_make_gsettings.sh
 
-  # Copy source.list
+  # Copy sources.list
   - name: Copy /etc/sources.list
-    copy: src=/var/lab_esterni/etc/sources.list dest=/etc/apt/ owner=root group=root mode="u=rw,g=r,o=r"
+    #copy: src=/var/lab_esterni/etc/sources.list dest=/etc/apt/ owner=root group=root mode="u=rw,g=r,o=r"
+    copy: src=./files/sources.list dest=/etc/apt/ owner=root group=root mode="u=rw,g=r,o=r"
     when: copy_sources=="yes"
 
