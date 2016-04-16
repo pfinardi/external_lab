@@ -24,24 +24,27 @@
     when: check_sshdir|failed
   
   - name: Check if SSH key exists
+    become_user: "{{ main_user }}"
     shell: test -f $HOME/.ssh/id_rsa
     changed_when: false
     ignore_errors: true
     register: check_key
   
   - name: Create SSH Key
+    become_user: "{{ main_user }}"
     shell: ssh-keygen -t rsa -b 1024 -f $HOME/.ssh/id_rsa -N ''
     when: check_key|failed
 
   #-------------------------------------------
   # Copy SSH public key of any host on backup server
   - name: install sshpass (important to copy ssh id without prompt password)
-    become_user: root
+    #become_user: root
     apt: name=sshpass state=latest
   - name: Copy SSH key on backup server
     become_user: "{{ main_user }}"
     shell: sshpass -p {{ labext_pwd }} ssh-copy-id -i $HOME/.ssh/id_rsa.pub labext@{{ ip_server }}
-    when: ansible_eth0.ipv4.address != "{{ ip_server }}" and ansible_eth1.ipv4.address != "{{ ip_server }}"
+    #when: ansible_eth0.ipv4.address != "{{ ip_server }}" and ansible_eth1.ipv4.address != "{{ ip_server }}"
+    when: ansible_eth0.ipv4.address != "{{ ip_server }}"
 
 
 
@@ -49,6 +52,10 @@
 # Only hosts of laboratory 36
 
 - hosts: lab36
+  vars:
+  - main_user: "riservato"
+  - ip_server: 192.168.150.135
+  - labext_pwd: noooooooo
 
   tasks:
   #-------------------------------------------  
@@ -66,6 +73,10 @@
 # Only hosts of laboratory 37
 
 - hosts: lab37
+  vars:
+  - main_user: "riservato"
+  - ip_server: 192.168.150.135
+  - labext_pwd: noooooooo
 
   tasks:
   #-------------------------------------------  
